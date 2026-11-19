@@ -1,0 +1,16 @@
+{
+  "name": "@milify/panel-kit",
+  "version": "0.1.0",
+  "private": true,
+  "peerDependencies": {
+    "next": "^16.1.6",
+    "react": "^19.2.3"
+  },
+  "exports": {
+    "./gateway": "./gateway.ts",
+    "./layout": "./layout.tsx",
+    "./resources": "./resources.tsx",
+    "./client": "./client.ts",
+    "./panel.css": "./panel.css"
+  }
+}

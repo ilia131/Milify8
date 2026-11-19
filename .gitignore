@@ -1,0 +1,7 @@
+.venv
+/media
+db.sqlite3
+/shorts
+/music_agent
+*debug.log
+!.env.example

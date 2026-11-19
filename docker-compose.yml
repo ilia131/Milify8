@@ -1,0 +1,172 @@
+x-backend-environment: &backend-environment
+  DATABASE_URL: ${DATABASE_URL:-postgres://postgres:postgres@postgres:5432/milify}
+  REDIS_URL: ${REDIS_URL:-redis://redis:6379/1}
+  ML_SERVICE_URL: http://ml-service:8001
+  DJANGO_DEBUG: ${DJANGO_DEBUG:-0}
+  DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:?Set DJANGO_SECRET_KEY}
+  DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1,backend,api.milify.ir}
+  MILIFY_EXTRA_ORIGINS: ${MILIFY_EXTRA_ORIGINS:-}
+  MILIFY_FRONTEND_DOMAIN: ${MILIFY_FRONTEND_DOMAIN:-milify.ir}
+  MILIFY_FRONTEND_PROTOCOL: ${MILIFY_FRONTEND_PROTOCOL:-https}
+  MILIFY_ARTIST_SONG_LIMIT: ${MILIFY_ARTIST_SONG_LIMIT:-}
+  MILIFY_ARTIST_VIDEO_LIMIT: ${MILIFY_ARTIST_VIDEO_LIMIT:-}
+  MILIFY_ARTIST_UPLOAD_LIMITS_BY_PLAN: ${MILIFY_ARTIST_UPLOAD_LIMITS_BY_PLAN:-}
+  AUTH_COOKIE_SECURE: ${AUTH_COOKIE_SECURE:-1}
+  GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+  ARTIST_GOOGLE_CLIENT_ID: ${ARTIST_GOOGLE_CLIENT_ID:-}
+  AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:-}
+  AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:-}
+  EMAIL_HOST_USER: ${EMAIL_HOST_USER:-}
+  EMAIL_HOST_PASSWORD: ${EMAIL_HOST_PASSWORD:-}
+  VAPID_PUBLIC_KEY: ${VAPID_PUBLIC_KEY:-}
+  VAPID_PRIVATE_KEY: ${VAPID_PRIVATE_KEY:-}
+
+services:
+  backend:
+    build: .
+    container_name: milify-backend
+    restart: unless-stopped
+    command: sh -c "python manage.py migrate --noinput && exec gunicorn backend.wsgi:application --bind 0.0.0.0:8000"
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment: *backend-environment
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      ml-service:
+        condition: service_started
+
+  analytics-worker:
+    build: .
+    container_name: milify-analytics-worker
+    restart: unless-stopped
+    command: python manage.py update_song_stats
+    environment: *backend-environment
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:17
+    container_name: postgres-db-milify
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: milify
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d milify"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: milify-redis
+    restart: unless-stopped
+    command:
+      - redis-server
+      - --appendonly
+      - "yes"
+    healthcheck:
+      test:
+        - CMD
+        - redis-cli
+        - ping
+      timeout: 3s
+      interval: 5s
+      retries: 5
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - redis_data:/data
+
+  ml-service:
+    build:
+      context: ./ml-service
+      dockerfile: Dockerfile
+    container_name: milify-ml
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8001:8001"
+    volumes:
+      - ./ml-service/models:/app/models
+    environment:
+      PYTHONUNBUFFERED: "1"
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  milify-web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        APP: milify-web
+        API_URL: http://backend:8000
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000}
+        NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+        NEXT_PUBLIC_ARTIST_ORIGIN: ${NEXT_PUBLIC_ARTIST_ORIGIN:-https://artist.milify.ir}
+    environment:
+      API_URL: http://backend:8000
+    container_name: milify-web
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3000:3000"
+    depends_on:
+      - backend
+
+  milify-admin:
+    build:
+      context: ./frontend
+      args:
+        APP: milify-admin
+        SOURCE_STAGE: panel-source
+    environment:
+      API_URL: http://backend:8000
+      PANEL_ORIGIN: ${MILIFY_ADMIN_ORIGIN:-https://admin.milify.ir}
+    ports:
+      - "127.0.0.1:3001:3000"
+    restart: unless-stopped
+    depends_on:
+      - backend
+
+  milify-artist:
+    build:
+      context: ./frontend
+      args:
+        APP: milify-artist
+        SOURCE_STAGE: panel-source
+        NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${ARTIST_GOOGLE_CLIENT_ID:-}
+    environment:
+      API_URL: http://backend:8000
+      PANEL_ORIGIN: ${MILIFY_ARTIST_ORIGIN:-https://artist.milify.ir}
+    ports:
+      - "127.0.0.1:3002:3000"
+    restart: unless-stopped
+    depends_on:
+      - backend
+
+  nginx:
+    image: nginx:1.28-alpine
+    profiles: ["ingress"]
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deploy/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ${MILIFY_TLS_DIR:-./deploy/certs}:/etc/nginx/tls:ro
+    depends_on: [milify-web, milify-admin, milify-artist, backend]
+
+volumes:
+  postgres_data:
+    name: spotify-backend_postgres_data
+
+  redis_data:
+    name: spotify-backend_redis_data

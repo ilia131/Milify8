@@ -1,0 +1,172 @@
+"use client";
+
+import { useState } from "react";
+
+import { Shorts } from "@/redux/services/artistApislice";
+import { useAppDispatch } from "@/redux/hook";
+import { setVideoPlaying } from "@/redux/features/playerSlice";
+
+import ReelsViewer from "@/features/explore/ui/reels-viewer";
+import { useLanguage } from "@/i18n/LanguageProvider";
+
+import TitleMusic from "../TitleMusic";
+import ShortVideo from "../../ArtistButtons/ShortVideo";
+
+interface ShortVideosProps {
+  shortvideo?: Shorts[];
+  artistname: string;
+}
+
+const Clip = ({
+  shortvideo,
+  artistname,
+}: ShortVideosProps) => {
+  const { t } = useLanguage();
+
+  const dispatch = useAppDispatch();
+
+  const [activeIndex, setActiveIndex] =
+    useState<number | null>(null);
+
+  const isLoading = shortvideo === undefined;
+  const videos = shortvideo ?? [];
+
+  if (!isLoading && !videos.length) {
+    return null;
+  }
+
+  // =========================================================
+  // Skeleton
+  // =========================================================
+
+  if (isLoading) {
+    return (
+      <section
+        className="
+          grid
+          pl-4.5
+          pt-5.25
+          pr-4
+          gap-2.25
+          mb-50
+        "
+      >
+        <div className="flex items-center justify-between">
+          <div
+            className="
+              h-5
+              w-24
+              rounded-md
+              bg-white/10
+              animate-pulse
+            "
+          />
+
+          <div
+            className="
+              h-4
+              w-14
+              rounded-md
+              bg-white/5
+              animate-pulse
+            "
+          />
+        </div>
+
+        <div
+          className="
+            flex
+            h-45.75
+            gap-4.5
+            overflow-hidden
+          "
+        >
+          {Array.from({ length: 3 }).map((_, index) => (
+            <div
+              key={index}
+              className="
+                h-45.75
+                w-30
+                shrink-0
+                rounded-xl
+                bg-white/[0.06]
+                animate-pulse
+              "
+            >
+              <div className="h-full w-full rounded-xl bg-gradient-to-b from-white/[0.04] to-white/[0.01]" />
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  // =========================================================
+  // Render
+  // =========================================================
+
+  return (
+    <>
+      <section
+        className="
+          grid
+          pl-4.5
+          pt-5.25
+          pr-4
+          gap-2.25
+          mb-50
+        "
+      >
+        {/* <TitleMusic title={t("artist.clips")} /> */}
+
+        <div
+          className="
+            flex
+            h-45.75
+            gap-4.5
+            overflow-x-auto
+            hide-scrollbar
+            scroll-smooth
+            snap-x
+            snap-mandatory
+          "
+        >
+          {videos.map((item, index) => (
+              <div
+                key={item.uuid}
+                className="
+                  shrink-0
+                  snap-start
+                  animate-[fadeIn_.3s_ease]
+                "
+              >
+                <ShortVideo
+                  item={item}
+                  i={index}
+                  onOpen={(index) => {
+                    dispatch(setVideoPlaying());
+                    setActiveIndex(index);
+                  }}
+                />
+              </div>
+            ))}
+
+        </div>
+      </section>
+
+      {/* =====================================================
+          Reels Viewer
+      ===================================================== */}
+
+      {activeIndex !== null && (
+        <ReelsViewer
+          videos={videos}
+          startIndex={activeIndex}
+          onClose={() => setActiveIndex(null)}
+        />
+      )}
+    </>
+  );
+};
+
+export default Clip;

@@ -1,0 +1,11 @@
+import path from "node:path";
+import type { NextConfig } from "next";
+
+const config: NextConfig = {
+  output: "standalone",
+  transpilePackages: ["@milify/panel-kit"],
+  outputFileTracingRoot: path.resolve(process.cwd(), ".."),
+  turbopack: { root: path.resolve(process.cwd(), "..") },
+};
+
+export default config;
