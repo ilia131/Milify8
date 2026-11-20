@@ -30,11 +30,11 @@ export default function DiscographyPage() {
       <Link href={`/artist/discography/${slug}/albums`} className="milify-chip">همهٔ آلبوم‌ها</Link>
     </nav>
     {songs.isLoading ? <SkeletonSection title="در حال دریافت آهنگ‌ها" /> :
-      songs.isError ? <p role="alert">آهنگ‌ها دریافت نشدند. <button type="button" className="underline" onClick={songs.refetch}>تلاش دوباره</button></p> :
+      songs.isError ? <p role="alert">آهنگ‌ها دریافت نشدند. <button type="button" className="underline" onClick={() => void songs.refetch()}>تلاش دوباره</button></p> :
       songItems.length ? <CardSection title="آهنگ‌ها" items={songItems} variant="track" /> :
       <p className="text-[var(--milify-muted)]">هنوز آهنگی منتشر نشده است.</p>}
     {albums.isLoading ? <SkeletonSection title="در حال دریافت آلبوم‌ها" /> :
-      albums.isError ? <p role="alert">آلبوم‌ها دریافت نشدند. <button type="button" className="underline" onClick={albums.refetch}>تلاش دوباره</button></p> :
+      albums.isError ? <p role="alert">آلبوم‌ها دریافت نشدند. <button type="button" className="underline" onClick={() => void albums.refetch()}>تلاش دوباره</button></p> :
       albumItems.length ? <AlbumCards title="آلبوم‌ها" items={albumItems.slice(0, 6)} /> :
       <p className="text-[var(--milify-muted)]">هنوز آلبومی منتشر نشده است.</p>}
   </main>;
