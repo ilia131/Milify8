@@ -1,5 +1,6 @@
 "use client";
 
+import { Play } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import Link from "next/link";
@@ -64,16 +65,17 @@ const FreshTrackCard = ({
     variant2 !== "trending";
 
   return (
-    <div className="grid h-50.75 w-39.5 gap-3 snap-start shrink-0">
+    <div className="milify-track-card group min-w-0">
+      <div className="relative">
       {shouldPlayOnClick || isArtist ? (
         <button
           type="button"
           aria-label={`پخش ${item.title ?? "آهنگ"}`}
           onClick={handlePlay}
-          className="relative w-39.5 h-37.75 overflow-hidden rounded-lg cursor-pointer"
+          className="relative block aspect-square w-full overflow-hidden rounded-lg cursor-pointer"
         >
           {!loaded && (
-            <div className="absolute w-39.5 h-37.75 animate-pulse bg-zinc-800 rounded-lg" />
+            <div className="absolute inset-0 animate-pulse bg-zinc-800 rounded-lg" />
           )}
 
           <Image
@@ -89,7 +91,7 @@ const FreshTrackCard = ({
       ) : (
         <Link
           href={getTrackRoute()}
-          className="relative block w-39.5 h-37.75 overflow-hidden rounded-lg"
+          className="relative block aspect-square w-full overflow-hidden rounded-lg"
         >
           {!loaded && (
             <div className="absolute inset-0 animate-pulse bg-zinc-800 rounded-lg" />
@@ -107,14 +109,17 @@ const FreshTrackCard = ({
         </Link>
       )}
 
-      <div className="flex flex-col min-w-0">
+      {shouldPlayOnClick && !isArtist ? <span aria-hidden className="milify-play milify-card-action pointer-events-none"><Play size={16} fill="currentColor" /></span>
+        : !isArtist && <button type="button" className="milify-play milify-card-action" aria-label={`پخش ${item.title}`} onClick={handlePlay}><Play size={16} fill="currentColor" /></button>}
+      </div>
+      <div className="flex min-w-0 flex-col-reverse">
         {artistName && (
           <Link
             href={`/artist/${encodeURIComponent(artistName)}`}
-            className="text-[rgba(255_255_255/0.55)] text-[15px] line-clamp-2 pl-0"
+            className="text-[var(--milify-muted)] text-xs truncate"
           >
             {item.artists?.length
-              ? item.artists.join(", ")
+              ? item.artists.join("، ")
               : artistName}
           </Link>
         )}
@@ -122,7 +127,7 @@ const FreshTrackCard = ({
         {songUniqueId ? (
           <Link
             href={`/track/${songUniqueId}`}
-            className="text-[rgba(255_255_255/0.55)] text-[13px] line-clamp-2 pl-0"
+            className="text-white font-semibold text-sm truncate"
           >
             {item.title}
           </Link>

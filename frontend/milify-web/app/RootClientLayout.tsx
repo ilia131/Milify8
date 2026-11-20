@@ -38,9 +38,9 @@ export default function RootClientLayout({ children }: { children: React.ReactNo
         </div>
       ) : (
         <DesktopNavigation>
-          <div className="relative mx-auto min-h-dvh w-full max-w-[440px] lg:max-w-none">
+          <div className={`relative mx-auto min-h-dvh w-full min-w-0 milify-content ${hasSong ? "milify-content-playing" : ""}`}>
             {children}
-            {!hideBottomNav && <div className="lg:hidden"><BottomNav /></div>}
+            {!hideBottomNav && <BottomNav />}
           </div>
         </DesktopNavigation>
       )}

@@ -5,10 +5,10 @@ interface Props{
 
 const MusicBarMp = ({progress}:Props) => {
   return (
-    <div  className="w-full pr-4 pl-3.25 bg-[rgba(255,255,255,0.5)] h-0.5 mt-13.5 rounded-[1px] shrink-0 relative">
+    <div  className="absolute inset-x-0 bottom-0 h-0.5 bg-white/25">
     <div
       className="w-full  bg-[rgba(255,255,255,1)] h-0.5 absolute left-0    rounded-[1px]"
-      style={{ width: `${progress}` }}
+      style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
     />
    </div>
   )

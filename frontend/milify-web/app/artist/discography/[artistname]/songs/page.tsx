@@ -97,7 +97,7 @@ export default function ArtistSongsPage() {
 
   return (
     <main className="min-h-screen w-full bg-[#121212] text-white">
-      <div className="mx-auto min-h-screen w-full max-w-[440px] overflow-hidden">
+      <div className="mx-auto min-h-screen w-full max-w-5xl overflow-hidden">
 
         {/* ================= HERO ================= */}
 
@@ -132,7 +132,7 @@ export default function ArtistSongsPage() {
               <button
                 type="button"
                 onClick={() => router.back()}
-                aria-label="Go back"
+                aria-label="بازگشت"
                 className="
                   flex h-10 w-10
                   items-center justify-center
@@ -251,7 +251,7 @@ export default function ArtistSongsPage() {
             <div className="mt-7">
 
               <p className="mb-2 text-[12px] font-semibold uppercase tracking-[2px] text-[#1ed760]">
-                Discography
+                دیسکوگرافی
               </p>
 
               <h1
@@ -262,7 +262,7 @@ export default function ArtistSongsPage() {
                   tracking-[-1.5px]
                 "
               >
-                Songs
+                آهنگ‌ها
               </h1>
 
               <p className="mt-2 text-[14px] text-[#b3b3b3]">
@@ -347,7 +347,7 @@ export default function ArtistSongsPage() {
                 type="button"
                 onClick={handlePlay}
                 disabled={!songs.length}
-                aria-label="Play"
+                aria-label="پخش"
                 className="
                   flex h-14 w-14
                   items-center justify-center
@@ -407,7 +407,7 @@ export default function ArtistSongsPage() {
 
           <div className="mb-2 px-2">
             <h2 className="text-[20px] font-bold">
-              All songs
+              همهٔ آهنگ‌ها
             </h2>
           </div>
 
@@ -531,7 +531,7 @@ export default function ArtistSongsPage() {
               </p>
 
               <p className="mt-1 text-[13px] text-[#777]">
-                This artist   hasnt released any songs.
+                این هنرمند هنوز آهنگی منتشر نکرده است.
               </p>
             </div>
           )}

@@ -48,7 +48,7 @@ export default function TrackDetail() {
   // PARAM GUARD
   // -----------------------------
   const handleArtistClick = () => {
-    if (!artistName || artistName === "Unknown Artist") {
+    if (!artistName || ["Unknown Artist", "هنرمند ناشناس"].includes(artistName)) {
       return;
     }
   
@@ -169,7 +169,7 @@ export default function TrackDetail() {
 
   const shareTrack = async () => {
     if (!song?.unique_id || !song.image_url) {
-      toast.error("Track image is not available");
+      toast.error("کاور آهنگ در دسترس نیست");
       return;
     }
 
@@ -202,7 +202,7 @@ export default function TrackDetail() {
         await createInstagramStory({
           imageUrl: proxyImageUrl,
           title:
-            song.title || "Unknown Track",
+            song.title || "آهنگ بدون عنوان",
           artist:
             song.artistname ||
             "Unknown Artist",
@@ -286,7 +286,7 @@ export default function TrackDetail() {
   if (isLoading) {
     return (
       <div className="h-screen flex items-center justify-center text-white bg-[#121212]">
-        Loading...
+        در حال دریافت آهنگ…
       </div>
     );
   }
@@ -303,12 +303,11 @@ export default function TrackDetail() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center text-white bg-[#121212] px-5 text-center">
         <h1 className="text-2xl font-bold">
-          Track not found
+          آهنگ پیدا نشد
         </h1>
 
         <p className="text-zinc-500 mt-2">
-          This track may have been removed or is
-          temporarily unavailable.
+          این آهنگ در دسترس نیست.
         </p>
       </div>
     );
@@ -326,23 +325,23 @@ export default function TrackDetail() {
 
   const title =
     song.title?.trim() ||
-    "Unknown Track";
+    "آهنگ بدون عنوان";
 
   const artistName =
     song.artistname?.trim() ||
-    "Unknown Artist";
+    "هنرمند ناشناس";
 
   const albumName =
     song.album_name?.trim() ||
-    "Single";
+    "تک‌آهنگ";
 
   const genreName =
     song.genre_name?.trim() ||
-    "Unknown";
+    "نامشخص";
 
   const description =
     song.description?.trim() ||
-    "No description available.";
+    "توضیحی ثبت نشده است.";
 
   const lyrics = Array.isArray(song.lyrics)
     ? song.lyrics
@@ -441,7 +440,7 @@ export default function TrackDetail() {
 
           <div className="mt-6 text-center w-full">
             <p className="text-xs uppercase text-zinc-400">
-              Song
+              آهنگ
             </p>
 
             <h1
@@ -498,8 +497,8 @@ export default function TrackDetail() {
             disabled={likeLoading}
             aria-label={
               liked
-                ? "Unlike song"
-                : "Like song"
+                ? "حذف از آهنگ‌های پسندیده"
+                : "پسندیدن آهنگ"
             }
           >
             <Heart
@@ -521,7 +520,7 @@ export default function TrackDetail() {
             type="button"
             onClick={shareTrack}
             disabled={isSharing}
-            aria-label="Share track"
+            aria-label="اشتراک‌گذاری آهنگ"
             className="
               flex
               items-center
@@ -554,7 +553,7 @@ export default function TrackDetail() {
 
       <section className="px-4 sm:px-6 md:px-8 mt-8">
         <h2 className="text-2xl md:text-3xl font-bold mb-5">
-          About this track
+          دربارهٔ این آهنگ
         </h2>
 
         <div className="grid grid-cols-2 gap-3">
@@ -562,7 +561,7 @@ export default function TrackDetail() {
             <Disc3 />
 
             <p className="text-zinc-400 mt-3">
-              Genre
+              سبک
             </p>
 
             <p className="font-semibold">
@@ -574,31 +573,31 @@ export default function TrackDetail() {
             <Headphones />
 
             <p className="text-zinc-400 mt-3">
-              Plays
+              پخش‌ها
             </p>
 
             <p className="font-semibold">
-              {playCount}
+              {playCount.toLocaleString("fa-IR")}
             </p>
           </div>
 
           <div className="bg-[#181818] rounded-lg p-4">
             <p className="text-zinc-400">
-              Tempo
+              سرعت
             </p>
 
             <p className="font-semibold">
-              {tempo} BPM
+              {tempo.toLocaleString("fa-IR")} ضرب در دقیقه
             </p>
           </div>
 
           <div className="bg-[#181818] rounded-lg p-4">
             <p className="text-zinc-400">
-              Listeners
+              شنوندگان
             </p>
 
             <p className="font-semibold">
-              {listeners}
+              {listeners.toLocaleString("fa-IR")}
             </p>
           </div>
         </div>
@@ -608,7 +607,7 @@ export default function TrackDetail() {
 
       <section className="px-4 sm:px-6 md:px-8 mt-10">
         <h2 className="text-2xl md:text-3xl font-bold mb-4">
-          Description
+          توضیحات
         </h2>
 
         <p className="text-zinc-400 leading-7">
@@ -620,7 +619,7 @@ export default function TrackDetail() {
 
       <section className="px-4 sm:px-6 md:px-8 mt-10 pb-20">
         <h2 className="text-2xl md:text-3xl font-bold mb-4">
-          Lyrics
+          متن آهنگ
         </h2>
 
         {lyrics.length > 0 ? (
@@ -639,7 +638,7 @@ export default function TrackDetail() {
         ) : (
           <div className="bg-[#181818] rounded-xl p-5">
             <p className="text-zinc-500">
-              No lyrics available
+              متن آهنگ در دسترس نیست
             </p>
           </div>
         )}
@@ -954,7 +953,7 @@ async function createInstagramStory({
     "bold 28px Arial";
 
   ctx.fillText(
-    "Open in Milify",
+    "باز کردن در میلیفای",
     540,
     bottomY + 58
   );

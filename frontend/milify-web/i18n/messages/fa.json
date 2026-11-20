@@ -2,8 +2,9 @@
 {
     "home": {
         "freshTracks": "آهنگ‌های تازه",
-        "freshTrackFriday":"آهنک های تازه امروز",
-        "trendingHits": "آهنگ‌های ترند",
+        "errorLoadingArtists": "دریافت هنرمندان انجام نشد.",
+        "freshTrackFriday":"آهنگ‌های تازه",
+        "trendingHits": "آهنگ‌های پرشنونده",
         "popularAlbums": "آلبوم‌های محبوب",
         "yourFavoriteArtists": "هنرمندان مورد علاقه شما",
         "moreLike": "بیشتر شبیه",
@@ -33,8 +34,8 @@
     "browse": {
       "all": "همه",
       "music": "موسیقی",
-      "albums": "بیت ها",
-      "supportUs": "اشتراک ها"
+      "albums": "آلبوم‌ها",
+      "supportUs": "اشتراک"
     },
     
     "artist": {

@@ -10,9 +10,9 @@ export interface CardSliderProps {
 
 const CardSliderPA = ({cardimages} : CardSliderProps) => {
   return (
-    <div className="flex gap-3 overflow-x-auto overflow-y-hidden scroll-smooth snap-x snap-mandatory hide-scrollbar">
-        {cardimages?.map((item, i) => (
-            <CardsPa item={item} key={i} />
+    <div className="milify-track-grid">
+        {cardimages?.map((item) => (
+            <CardsPa item={item} key={item.id} />
         ))}
     </div>
   )

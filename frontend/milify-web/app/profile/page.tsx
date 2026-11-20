@@ -21,7 +21,7 @@ export default function ProfilePage() {
   const {
     data: profile,
     isLoading,
-    isError,
+    isError, refetch,
   } = useGetMyProfileQuery();
 
   const { data: notifications = [] } =
@@ -33,8 +33,8 @@ export default function ProfilePage() {
 
   if (isLoading) {
     return (
-      <main className="min-h-screen bg-[#0b0b0b] px-4 py-6 text-white">
-        <div className="mx-auto w-full max-w-[440px] animate-pulse">
+      <main className="min-h-screen bg-[var(--milify-surface)] px-4 py-6 text-white">
+        <div className="mx-auto w-full max-w-3xl animate-pulse">
           <div className="mb-6 flex items-center justify-between">
             <div className="h-10 w-10 rounded-full bg-white/[0.06]" />
             <div className="h-6 w-24 rounded bg-white/[0.06]" />
@@ -57,7 +57,7 @@ export default function ProfilePage() {
 
   if (isError || !profile) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-[#0b0b0b] px-5 text-white">
+      <main className="flex min-h-screen items-center justify-center bg-[var(--milify-surface)] px-5 text-white">
         <div className="text-center">
           <UserRound
             className="mx-auto mb-4 text-white/30"
@@ -68,9 +68,7 @@ export default function ProfilePage() {
             دریافت پروفایل ناموفق بود
           </h1>
 
-          <p className="mt-2 text-sm text-white/40">
-            دوباره تلاش کنید.
-          </p>
+          <button type="button" className="milify-chip mt-3" onClick={refetch}>تلاش دوباره</button>
         </div>
       </main>
     );
@@ -91,9 +89,9 @@ export default function ProfilePage() {
   return (
     <main
       dir="rtl"
-      className={`min-h-screen bg-[#0b0b0b] px-4 pb-28 pt-5 text-white `}
+      className={`min-h-screen bg-[var(--milify-surface)] px-4 pb-28 pt-5 text-white `}
     >
-      <div className="mx-auto w-full max-w-[440px]">
+      <div className="mx-auto w-full max-w-3xl">
 
         {/* ================= HEADER ================= */}
 

@@ -33,7 +33,7 @@ const settingItems = [
   {
     icon: Bell,
     title: "اعلان‌ها",
-    description: "مدیریت اعلان‌های Milify",
+    description: "مدیریت اعلان‌های میلیفای",
     href: "/notifications",
   },
   {
@@ -65,9 +65,9 @@ const [logoutRequest, { isLoading: isLoggingOut }] =
   return (
     <main
       dir="rtl"
-      className={` min-h-screen bg-[#0b0b0b] px-4 pb-28 pt-5 text-white`}
+      className={` min-h-screen bg-[var(--milify-surface)] px-4 pb-28 pt-5 text-white`}
     >
-      <div className="mx-auto w-full max-w-[440px]">
+      <div className="mx-auto w-full max-w-3xl">
 
         {/* ================= HEADER ================= */}
 

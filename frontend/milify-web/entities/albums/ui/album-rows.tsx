@@ -13,8 +13,8 @@ interface FreshTrackRowsProps {
 
 const  AlbumsRows = ({songs}:FreshTrackRowsProps) => {
   return (
-    <div className=" pl-4.5 pt-15.5  grid   gap-5  items-center">
-      <TitleMusic title="Popular Albums Tracks" />
+    <div className="grid gap-3">
+      <TitleMusic title="آهنگ‌های آلبوم" />
       {songs?.map((item , i)=>(
          <MusicRowCard key={i} item={item} songs={songs} index={i} />
       ))} 

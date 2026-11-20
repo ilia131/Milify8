@@ -889,35 +889,10 @@ export const useAudioPlayer = () => {
    * --------------------------------------------------
    */
 
-  const formatTime =
-    useCallback(
-      (time: number) => {
-        if (!time) {
-          return "0:00";
-        }
-
-
-        const minutes =
-          Math.floor(
-            time / 60
-          );
-
-
-        const seconds =
-          Math.floor(
-            time % 60
-          );
-
-
-        return `${minutes}:${
-          seconds < 10
-            ? "0"
-            : ""
-        }${seconds}`;
-      },
-      []
-    );
-
+  const formatTime = useCallback((time: number) => {
+    const total = Number.isFinite(time) ? Math.max(0, Math.floor(time)) : 0;
+    return `${Math.floor(total / 60).toLocaleString("fa-IR", { useGrouping: false })}:${(total % 60).toLocaleString("fa-IR", { minimumIntegerDigits: 2 })}`;
+  }, []);
 
   /*
    * --------------------------------------------------

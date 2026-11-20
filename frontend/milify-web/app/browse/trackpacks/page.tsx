@@ -37,16 +37,16 @@ export default function SubscriptionPage() {
       <h1 className="mb-5 text-2xl font-bold">اشتراک میلیفای</h1>
       {plans.isLoading || current.isLoading ? <p role="status">در حال بارگذاری اشتراک‌ها…</p> : null}
       {plans.isError || current.isError ? (
-        <button type="button" className="text-emerald-300" onClick={() => {
+        <button type="button" className="text-[var(--milify-green)]" onClick={() => {
           if (plans.isError) plans.refetch();
           if (current.isError) current.refetch();
         }}>بارگذاری انجام نشد. تلاش دوباره</button>
       ) : null}
 
       {subscription ? (
-        <section className="rounded-2xl border border-emerald-400/25 bg-emerald-400/5 p-5">
+        <section className="rounded-2xl border border-[var(--milify-vip)] bg-[var(--milify-vip)]/20 p-5">
           <h2 className="text-lg font-semibold">{subscription.plan.name}</h2>
-          <p className="mt-1 text-emerald-300">اشتراک فعال</p>
+          <p className="mt-1 text-[var(--milify-green)]">اشتراک فعال</p>
           <p className="mt-3 text-sm text-white/70">پایان اشتراک {date.format(new Date(subscription.expires_at))}</p>
         </section>
       ) : (
@@ -59,10 +59,10 @@ export default function SubscriptionPage() {
               {authenticated ? (
                 <button type="button" disabled={isLoading || current.isFetching || current.isError}
                   onClick={() => purchase(plan.id)}
-                  className="w-full rounded-xl bg-emerald-300 py-2.5 text-black disabled:opacity-50">
+                  className="w-full rounded-xl bg-[var(--milify-green)] py-2.5 text-black disabled:opacity-50">
                   {isLoading ? "در حال ثبت خرید…" : "خرید اشتراک"}
                 </button>
-              ) : <Link className="text-emerald-300" href="/auth/login">ورود برای خرید اشتراک</Link>}
+              ) : <Link className="text-[var(--milify-green)]" href="/auth/login">ورود برای خرید اشتراک</Link>}
             </article>
           ))}
           {plans.data?.length === 0 && <p>در حال حاضر طرحی برای خرید وجود ندارد.</p>}

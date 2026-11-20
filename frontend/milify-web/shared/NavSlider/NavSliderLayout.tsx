@@ -10,7 +10,7 @@ export const NavSliderLayout = ({ children }: NavSliderLayoutProps) => {
         fixed
         top-0
         z-40
-        w-[min(100%,440px)]
+        w-full
         lg:sticky lg:top-16 lg:w-full lg:pt-3 lg:ps-0
         pt-7.5
         pb-1.5

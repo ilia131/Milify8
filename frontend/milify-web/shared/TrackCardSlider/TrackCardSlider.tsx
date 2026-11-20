@@ -17,7 +17,7 @@ const TrackCardSlider = ({
   variant2,
 }: CardSliderProps) => {
   return (
-    <div className="flex gap-3 overflow-x-auto overflow-y-hidden scroll-smooth snap-x snap-mandatory hide-scrollbar">
+    <div className="milify-track-grid">
       {cardimages?.slice(0, 5)?.map((item, i) => (
         <FreshTrackCard
           item={item}

@@ -13,7 +13,7 @@ interface Props {
   currentSong:Song;
   lowerTime:string, 
   higherTime:string;
-  handleSeek:(e: React.MouseEvent<HTMLDivElement>) => void
+  handleSeek: (fraction: number) => void
   buffered:number
   onNext: ()=>void
   onPrevious: ()=>void
