@@ -56,6 +56,7 @@ export const apiSlice = createApi({
     "Playlists",
     "Playlist",
     "FavoriteArtists",
+    "ArtistFollows",
     "PlayerAds",
     "SubscriptionPlans",
     "MySubscription",

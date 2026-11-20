@@ -17,7 +17,7 @@ export default function DiscographyPage() {
 
   return (
     <main className="min-h-screen w-full bg-[#121212] text-white pb-30">
-      <div className="mx-auto min-h-screen w-full max-w-[440px] overflow-hidden">
+      <div className="mx-auto min-h-screen w-full max-w-5xl overflow-hidden">
 
         {/* Top subtle Spotify-style glow */}
         <div
@@ -34,7 +34,7 @@ export default function DiscographyPage() {
 
             <Link
               href={`/artist/${artistname}`}
-              aria-label="Back"
+              aria-label="بازگشت"
               className="
                 flex h-10 w-10 items-center justify-center
                 rounded-full
@@ -106,11 +106,11 @@ export default function DiscographyPage() {
         <section className="relative px-5 pb-7 pt-10">
 
           <p className="mb-2 text-[13px] font-semibold uppercase tracking-[2px] text-[#1ed760]">
-            Artist
+            هنرمند
           </p>
 
           <h1 className="text-[36px] font-black leading-[1.05] tracking-[-1.5px]">
-            Discography
+            دیسکوگرافی
           </h1>
 
           <p className="mt-3 text-[14px] text-[#b3b3b3]">
@@ -138,7 +138,7 @@ export default function DiscographyPage() {
               }
             `}
           >
-            Songs
+            آهنگ‌ها
           </Link>
 
           <Link
@@ -155,7 +155,7 @@ export default function DiscographyPage() {
               }
             `}
           >
-            Albums
+            آلبوم‌ها
           </Link>
 
         </nav>
@@ -170,11 +170,11 @@ export default function DiscographyPage() {
             <div>
               <div className="mb-5">
                 <h2 className="text-[22px] font-bold tracking-[-0.4px]">
-                  Songs
+                  آهنگ‌ها
                 </h2>
 
                 <p className="mt-1 text-[13px] text-[#a7a7a7]">
-                  Singles and tracks
+                  تک‌آهنگ‌ها و قطعه‌ها
                 </p>
               </div>
 
@@ -188,7 +188,7 @@ export default function DiscographyPage() {
                   text-[#6f6f6f]
                 "
               >
-                Songs will appear here
+                آهنگ‌های هنرمند اینجا نمایش داده می‌شوند.
               </div>
             </div>
           )}
@@ -197,11 +197,11 @@ export default function DiscographyPage() {
             <div>
               <div className="mb-5">
                 <h2 className="text-[22px] font-bold tracking-[-0.4px]">
-                  Albums
+                  آلبوم‌ها
                 </h2>
 
                 <p className="mt-1 text-[13px] text-[#a7a7a7]">
-                  Albums and EPs
+                  آلبوم‌ها و آلبوم‌های کوتاه
                 </p>
               </div>
 
@@ -215,7 +215,7 @@ export default function DiscographyPage() {
                   text-[#6f6f6f]
                 "
               >
-                Albums will appear here
+                آلبوم‌های هنرمند اینجا نمایش داده می‌شوند.
               </div>
             </div>
           )}
@@ -225,7 +225,7 @@ export default function DiscographyPage() {
 
               <div className="mb-5">
                 <h2 className="text-[22px] font-bold">
-                  Releases
+                  آثار منتشرشده
                 </h2>
 
                 <p className="mt-1 text-[13px] text-[#a7a7a7]">
@@ -284,11 +284,11 @@ export default function DiscographyPage() {
                   </div>
 
                   <h3 className="mt-3 text-[15px] font-bold">
-                    Albums
+                    آلبوم‌ها
                   </h3>
 
                   <p className="mt-1 text-[12px] text-[#a7a7a7]">
-                    Full releases
+                    آلبوم‌های کامل
                   </p>
                 </Link>
 
@@ -340,7 +340,7 @@ export default function DiscographyPage() {
                   </div>
 
                   <h3 className="mt-3 text-[15px] font-bold">
-                    Songs
+                    آهنگ‌ها
                   </h3>
 
                   <p className="mt-1 text-[12px] text-[#a7a7a7]">

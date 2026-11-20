@@ -19,7 +19,7 @@ export const FilterButton = ({ item, isActive, onClick  }: FilterButtonProps) =>
   const baseClasses =
     "flex items-center justify-center rounded-[19px] text-[13px] transition-colors";
     const activeClasses =
-    "bg-[#1ED760] text-black font-semibold shadow-[0_0_20px_rgba(30,215,96,0.35)]";
+    "bg-[var(--milify-green)] text-black font-semibold";
   
   const inactiveClasses =
     "bg-white/5 backdrop-blur-xl border border-white/10 text-white/80 hover:bg-white/10";
@@ -31,6 +31,8 @@ export const FilterButton = ({ item, isActive, onClick  }: FilterButtonProps) =>
   
   return (
     <button
+      type="button"
+      aria-pressed={isActive}
       onClick={onClick}
       className={`${item.width} ${item.height} ${item.padding} ${baseClasses} ${
         isActive ? activeClasses : inactiveClasses

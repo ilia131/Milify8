@@ -4,76 +4,22 @@ import PlayShuffle from "@/components/Artist/ArtistButtons/PlayShuffle"
 import MusicRowCard from "@/components/Artist/ArtistTabs/MusicRowCard"
 import { useRouter, useParams } from "next/navigation"
 import { SongItem, useGetPlaylistByIdQuery } from "@/redux/services/playlistApiSlice"
-import {
-  Song,
-  setQueue,
-  togglePlay,
-} from "@/redux/features/playerSlice"
-import {
-  useAppDispatch,
-  useAppSelector,
-} from "@/redux/hook"
+import type { Song } from "@/redux/features/playerSlice"
+import Image from "next/image"
 
 const Page = () => {
   const params = useParams()
   const router = useRouter()
-  const dispatch = useAppDispatch()
 
   const playlistId = params?.unique_id as string
 
   const {
     data: songPlayList ,
-    isLoading,
+    isLoading, isError, refetch,
   } = useGetPlaylistByIdQuery(playlistId)
 
   const filteredSongs: Song[] =
     songPlayList?.tracks?.map((item: SongItem) => item.song) || []
-
-  const { queue, isPlaying } = useAppSelector(
-    (state) => state.player
-  )
-
-  /*
-   * Check if current player queue belongs
-   * to this playlist.
-   */
-  const isSameQueue =
-    queue.length === filteredSongs.length &&
-    filteredSongs.length > 0 &&
-    filteredSongs.every((song) =>
-      queue.some((q) => q.id === song.id)
-    )
-
-  const handlePlay = () => {
-    if (!filteredSongs.length) return
-
-    if (isSameQueue) {
-      dispatch(togglePlay())
-      return
-    }
-
-    dispatch(
-      setQueue({
-        songs: filteredSongs,
-        startIndex: 0,
-      })
-    )
-  }
-
-  const handleShuffle = () => {
-    if (!filteredSongs.length) return
-
-    const shuffled = [...filteredSongs].sort(
-      () => Math.random() - 0.5
-    )
-
-    dispatch(
-      setQueue({
-        songs: shuffled,
-        startIndex: 0,
-      })
-    )
-  }
 
   /*
    * Use first song's cover as playlist cover.
@@ -84,7 +30,7 @@ const Page = () => {
 
   return (
     <main className="min-h-screen w-full bg-[#121212] text-white">
-      <div className="mx-auto w-full max-w-[440px] min-h-screen bg-[#121212]">
+      <div className="mx-auto w-full max-w-5xl min-h-screen bg-[#121212]">
 
         {/* ================= HEADER ================= */}
         <section className="relative overflow-hidden">
@@ -111,7 +57,7 @@ const Page = () => {
               type="button"
               onClick={() => router.back()}
               className="mb-7 flex h-9 w-9 items-center justify-center rounded-full bg-black/30 backdrop-blur-md active:scale-95"
-              aria-label="Go back"
+              aria-label="بازگشت"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -142,9 +88,9 @@ const Page = () => {
                 "
               >
                 {playlistCover ? (
-                  <img
+                  <Image width={220} height={220}
                     src={playlistCover}
-                    alt={songPlayList?.name || "Playlist"}
+                    alt={songPlayList?.name || "پلی‌لیست"}
                     className="h-full w-full object-cover"
                   />
                 ) : (
@@ -186,16 +132,15 @@ const Page = () => {
             <div className="mt-7">
 
               <h1 className="line-clamp-2 text-[24px] font-bold leading-[1.15] tracking-[-0.4px]">
-                {songPlayList?.name || "Playlist"}
+                {songPlayList?.name || "پلی‌لیست"}
               </h1>
 
               <p className="mt-2 text-[13px] font-medium text-white/55">
-                Playlist
+                پلی‌لیست
               </p>
 
               <p className="mt-1 text-[13px] text-white/45">
-                {filteredSongs.length}{" "}
-                {filteredSongs.length === 1 ? "song" : "songs"}
+                {filteredSongs.length.toLocaleString("fa-IR")} آهنگ
               </p>
             </div>
 
@@ -231,18 +176,19 @@ const Page = () => {
             </div>
           )}
 
-          {!isLoading && filteredSongs.length === 0 && (
+          {isError && <p role="alert">پلی‌لیست دریافت نشد. <button type="button" className="underline" onClick={refetch}>تلاش دوباره</button></p>}
+          {!isError && !isLoading && filteredSongs.length === 0 && (
             <div className="flex min-h-[180px] flex-col items-center justify-center text-center">
               <div className="mb-3 text-4xl opacity-50">
                 ♪
               </div>
 
               <p className="text-[15px] font-semibold text-white/80">
-                This playlist is empty
+                این پلی‌لیست خالی است
               </p>
 
               <p className="mt-1 text-[13px] text-white/40">
-                Add some songs to get started
+                برای شروع، چند آهنگ اضافه کنید.
               </p>
             </div>
           )}

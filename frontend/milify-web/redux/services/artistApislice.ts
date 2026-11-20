@@ -241,7 +241,7 @@ export const ArtistApiSlice = apiSlice.injectEndpoints({
       query: () => "/artistslist/",
     }),
 
-    getAlbumsList: builder.query({
+    getAlbumsList: builder.query<Album[], void>({
       query: () => "/albums/",
     }),
 

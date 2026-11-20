@@ -1,5 +1,11 @@
 import { apiSlice } from "./apiSlice";
 
+interface FollowedArtist {
+  id: number;
+  artist_uuid: string;
+  artist_name: string;
+}
+
 export const followApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
 
@@ -8,6 +14,7 @@ export const followApiSlice = apiSlice.injectEndpoints({
         url: `/artists/${artist_id}/follow/`,
         method: "POST",
       }),
+      invalidatesTags: ["ArtistFollows"],
     }),
 
     getArtistFollowers: builder.query({
@@ -18,8 +25,9 @@ export const followApiSlice = apiSlice.injectEndpoints({
       query: (artist_id) => `/artists/${artist_id}/is-following/`,
     }),
 
-    getUserFollowing: builder.query({
+    getUserFollowing: builder.query<FollowedArtist[], void>({
       query: () => `/artists/following/`,
+      providesTags: ["ArtistFollows"],
     }),
 
   }),

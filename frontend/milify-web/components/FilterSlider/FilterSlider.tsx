@@ -12,6 +12,7 @@ import BigCardArtist from "./BigCardArtist/BigCardArtist";
 
 import {
   useArtistsQuery,
+  useGetAlbumsListQuery,
   useGetBigCardArtistsQuery,
   useGetFreshTrackQuery,
   useGetPopularAlbumQuery,
@@ -35,6 +36,7 @@ export default function FilterSlider() {
     data,
     error,
     isLoading,
+    refetch,
   } = useArtistsQuery();
 
   const {
@@ -44,6 +46,8 @@ export default function FilterSlider() {
   const {
     data: Trending,
   } = useGetTredingTrackQuery();
+
+  const { data: newAlbums } = useGetAlbumsListQuery();
 
   const {
     data: PopularAlbum,
@@ -57,7 +61,7 @@ export default function FilterSlider() {
 
   if (isLoading) {
     return (
-      <div className="pl-4 pt-23.5 lg:pt-6 pb-24">
+      <div className="px-4 pt-4">
         <SkeletonSection
           title={t("home.freshTracks")}
         />
@@ -77,17 +81,10 @@ export default function FilterSlider() {
     );
   }
 
-  if (error) {
-    return (
-      <div className="p-4 text-red-500">
-        {t("home.errorLoadingArtists")}
-      </div>
-    );
-  }
-
   return (
-    <div className="pl-4 relative hide-scrollbar pb-24 pt-23.25 lg:pt-6 animate-[fadeIn_.4s_ease]">
+    <div className="px-4 lg:px-0 relative hide-scrollbar pt-4 animate-[fadeIn_.4s_ease]">
 
+      {error && <p role="alert" className="pb-2 text-sm text-[var(--milify-muted)]">{t("home.errorLoadingArtists")}{" "}<button type="button" className="underline" onClick={refetch}>تلاش دوباره</button></p>}
       <ArtistMiniCard />
 
       {FreshTrack && FreshTrack.length > 0 && (
@@ -109,6 +106,8 @@ export default function FilterSlider() {
           
         />
       )}
+
+      {!!newAlbums?.length && <CardSectionPA title="آلبوم‌های تازه" items={newAlbums.slice(0, 6)} />}
 
       {PopularAlbum && PopularAlbum.length > 0 && (
         <CardSectionPA
@@ -134,7 +133,7 @@ export default function FilterSlider() {
         />
       )}
 
-      <div className="pb-50">
+      <div className="pb-8">
         {bigArtists?.slice(0,5).map((artist) => {
           const firstTrackImage =
             artist.top_tracks?.[0]?.image_url;

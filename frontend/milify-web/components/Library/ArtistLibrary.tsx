@@ -4,11 +4,8 @@ import { useState } from "react"
 import AddArtist from "./AddArtist"
 import AddArtistModal from "./AddArtistModal"
 import LibraryMusicCard from "./LibraryMusicCard"
-import { StaticImageData } from "next/image"
-import { Song } from "@/redux/features/playerSlice"
 import Link from "next/link"
 import { PlaylistCoverGrid } from "@/components/Library/PlaylistCoverGrid"
-import { useRouter } from "next/navigation"
 import { Artist } from "@/redux/services/artistApislice"
 import { Playlist } from "@/redux/services/playlistApiSlice"
 
@@ -19,10 +16,9 @@ interface Props {
 
 const ArtistLibrary = ({   artist , playlist }: Props) => {
   const [showAddArtistModal, setShowAddArtistModal] = useState(false)
-  const router = useRouter()
 
   return (
-    <div className="w-full relative top-42 pb-40 grid gap-3 px-4">
+    <div className="w-full grid gap-3">
       {/* liked songs shortcut */}
       <Link href="/library/LikedSongs" className="flex gap-3 ">
         {/* Liked Songs SVG */}
@@ -59,8 +55,8 @@ const ArtistLibrary = ({   artist , playlist }: Props) => {
           </defs>
         </svg>
         <div className="flex flex-col justify-center ">
-          <p className="font-bold text-white">Liked Songs</p>
-          <p className="text-semibold text-[#ffffff5f] text-[12px]">Playlist</p>
+          <p className="font-bold text-white">آهنگ‌های پسندیده</p>
+          <p className="text-semibold text-[#ffffff5f] text-[12px]">پلی‌لیست</p>
         </div>
       </Link>
 
@@ -69,17 +65,17 @@ const ArtistLibrary = ({   artist , playlist }: Props) => {
            <div className="py-4 flex flex-col gap-5">
       
            {playlist?.map((pl) => (
-             <div
+             <Link
                key={pl.id}
-               onClick={() => router.push(`/library/playlist/${pl.unique_id}`)}
-               className="flex items-center gap-4 cursor-pointer"
+               href={`/library/playlist/${encodeURIComponent(pl.unique_id)}`}
+               className="catalog-result"
              >
                <PlaylistCoverGrid tracks={pl.tracks || []} />
                <div className="flex flex-col">
                  <p className="text-white font-medium">{pl.name}</p>
-                 <p className="text-zinc-400 text-[12px]">{pl.tracks?.length} songs</p>
+                 <p className="text-zinc-400 text-[12px]">{(pl.tracks_count ?? pl.tracks?.length ?? 0).toLocaleString("fa-IR")} آهنگ</p>
                </div>
-             </div>
+             </Link>
            ))}
          </div>
       )}

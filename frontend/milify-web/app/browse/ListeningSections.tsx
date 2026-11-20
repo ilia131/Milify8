@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import CardSection from "@/shared/CardSection/CardSection";
 import { useAppSelector } from "@/redux/hook";
 import { useGetForYouQuery, useGetRecentlyPlayedQuery } from "@/redux/services/songApiSlice";
@@ -17,7 +18,10 @@ export default function ListeningSections() {
   ];
 
   return (
-    <div className="px-4 pt-24 lg:px-0 lg:pt-5">
+    <div className="px-4 lg:px-0">
+      {!!history.data?.[0] && <div className="mt-4">
+        <Link href="/library/recent" className="milify-chip inline-flex">مشاهدهٔ همهٔ پخش‌های اخیر</Link>
+      </div>}
       {sections.map(({ title, songs, query }) => songs?.length ? (
         <CardSection key={title} title={title} variant="track" items={songs} />
       ) : (

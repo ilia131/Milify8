@@ -1,7 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 
+import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 import { FilterItem } from "@/components/FilterSlider/types";
 import ArtistLibrary from "@/components/Library/ArtistLibrary";
 import HeaderSection from "@/components/Library/HeaderSection";
@@ -21,14 +23,14 @@ import { useToast } from "@/components/ToastProvider/ToastProvider";
 
 const filters = [
   {
-    name: "Playlists",
+    name: "پلی‌لیست‌ها",
     href: "/browse",
     height: "h-[35px]",
     padding: "px-4",
     width: "w-[85px]",
   },
   {
-    name: "Artist",
+    name: "هنرمندان",
     href: "/browse/music",
     height: "h-[34px]",
     padding: "px-4",
@@ -36,15 +38,15 @@ const filters = [
   },
 ];
 
-const Library = () => {
-  const { data: artists } =
-    useGetFavArtistsQuery(0);
+const Library = ({ view }: { view: string | null }) => {
+  const artistQuery = useGetFavArtistsQuery(0);
+  const { data: artists } = artistQuery;
 
-  const { data: playList } =
-    useGetUserPlaylistsQuery(0);
+  const playlistQuery = useGetUserPlaylistsQuery(0);
+  const { data: playList } = playlistQuery;
 
   const [activeFilter, setActiveFilter] =
-    useState<FilterItem | null>(null);
+    useState<FilterItem | null>(() => view === "playlists" ? filters[0] : view === "artists" ? filters[1] : null);
 
   const [isSearching, setIsSearching] =
     useState(false);
@@ -55,7 +57,7 @@ const Library = () => {
   const [isOpen, setIsOpen] =
     useState(false);
 
-  const [createPlaylist] =
+  const [createPlaylist, { isLoading: creatingPlaylist }] =
     useCreatePlaylistMutation();
 
   const { success, error } =
@@ -66,11 +68,11 @@ const Library = () => {
 
   const showArtists =
     !activeFilter ||
-    activeFilter.name === "Artist";
+    activeFilter.name === "هنرمندان";
 
   const showPlaylists =
     !activeFilter ||
-    activeFilter.name === "Playlists";
+    activeFilter.name === "پلی‌لیست‌ها";
 
   // =========================================================
   // Artists
@@ -152,13 +154,10 @@ const Library = () => {
       setIsOpen(false);
 
       success(
-        "Playlist created successfully."
+        "پلی‌لیست ساخته شد."
       );
-    } catch (error ) {
-      console.error(
-        "Playlist creation failed:",
-        error
-      );
+    } catch {
+      error("ساخت پلی‌لیست انجام نشد. دوباره تلاش کنید.");
     }
   };
 
@@ -167,7 +166,7 @@ const Library = () => {
   // =========================================================
 
   return (
-    <section>
+    <main className="milify-page">
       <HeaderSection
         filters={filters}
         activeFilter={activeFilter}
@@ -180,6 +179,16 @@ const Library = () => {
         setSearchTerm={setSearchTerm}
       />
 
+      <div className="my-4 flex flex-wrap gap-2">
+        <Link href="/library/recent" className="milify-chip">آخرین پخش‌ها</Link>
+        <Link href="/library/following" className="milify-chip">هنرمندان دنبال‌شده</Link>
+        <Link href="/browse/albums" className="milify-chip">آلبوم‌ها</Link>
+      </div>
+      {(artistQuery.isLoading || playlistQuery.isLoading) && <p role="status">در حال دریافت کتابخانه…</p>}
+      {artistQuery.isError && <button type="button" className="underline" onClick={artistQuery.refetch}>دریافت دوبارهٔ هنرمندان</button>}
+      {playlistQuery.isError && <button type="button" className="underline" onClick={playlistQuery.refetch}>دریافت دوبارهٔ پلی‌لیست‌ها</button>}
+      {!artistQuery.isFetching && !playlistQuery.isFetching && !artistQuery.isError && !playlistQuery.isError &&
+        !filteredArtists.length && !filteredPlaylists.length && <p className="mb-3 text-[var(--milify-muted)]">موردی برای نمایش در این فیلتر وجود ندارد.</p>}
       <ArtistLibrary
         artist={filteredArtists}
         playlist={filteredPlaylists}
@@ -187,7 +196,7 @@ const Library = () => {
 
       {isOpen && (
         <ModalPlayList
-          isOpen={isOpen}
+          busy={creatingPlaylist}
           onClose={() =>
             setIsOpen(false)
           }
@@ -196,8 +205,15 @@ const Library = () => {
           }
         />
       )}
-    </section>
+    </main>
   );
 };
 
-export default Library;
+function LibraryView() {
+  const view = useSearchParams().get("view");
+  return <Library key={view} view={view} />;
+}
+
+export default function LibraryPage() {
+  return <Suspense fallback={<p role="status" className="milify-page">در حال دریافت کتابخانه…</p>}><LibraryView /></Suspense>;
+}

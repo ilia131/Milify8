@@ -1,37 +1,25 @@
-"use client"
-import { Suspense, useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation';
-import SearchHeader from '@/components/Search/SearchHeaders/SearchHeader';
-import SearchShortVideo from '@/components/Search/SearchShortVideo/SearchShortVideo';
-import SearchFilterAllCard from '@/components/Search/SearchFilter/SearchFilterAllCard';
-import { useGetShortVideoQuery } from '@/redux/services/artistApislice';
+"use client";
 
+import { Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+import CatalogSearch from "@/features/search/ui/CatalogSearch";
+import SearchShortVideo from "@/components/Search/SearchShortVideo/SearchShortVideo";
+import SearchFilterAllCard from "@/components/Search/SearchFilter/SearchFilterAllCard";
+import { useGetShortVideoQuery } from "@/redux/services/artistApislice";
 
+function DiscoverSearch() {
+  const { data } = useGetShortVideoQuery(3);
+  return <div className="mt-6">
+    <SearchFilterAllCard title="مرور بر اساس سبک موسیقی" />
+    {!!data?.results.length && <SearchShortVideo shortvideo={data.results.slice(0, 3)} title="ویدیوهای کوتاه" />}
+  </div>;
+}
 
-const Search = () => {
+function Search() {
   const query = useSearchParams().get("q")?.trim().slice(0, 200) ?? "";
-  const [scrolled, setScrolled] = useState(false);
-  const { data} = useGetShortVideoQuery(3)
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 40);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-  return (
-       <div className="flex flex-col pt-7.5 ">
-          <SearchHeader scrolled={scrolled} query={query} />
-          {/* <SearchFilterSection categories={categories} title='Start browsing' /> */}
-          {(data?.results.length ?? 0) > 0 && (
-                     <SearchShortVideo shortvideo={data?.results.slice(0,3)} title='ویدیوهای کوتاه' />
-          )}
-          <SearchFilterAllCard  title='مرور بر اساس سبک موسیقی' />
-       </div>
-   
-  )
+  return <CatalogSearch key={query} initialQuery={query}><DiscoverSearch /></CatalogSearch>;
 }
 
 export default function SearchPage() {
-  return <Suspense fallback={<p role="status" className="p-4">در حال بارگذاری جستجو…</p>}><Search /></Suspense>;
+  return <Suspense fallback={<p role="status" className="milify-page">در حال بارگذاری جست‌وجو…</p>}><Search /></Suspense>;
 }

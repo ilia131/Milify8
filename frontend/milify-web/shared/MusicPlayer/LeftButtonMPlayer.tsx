@@ -1,35 +1,15 @@
 "use client";
 
+import { Pause, Play } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { togglePlay } from "@/redux/features/playerSlice";
 
-
-
-import CastPlayer from "./CastPlayer"
-import PauseSvg from "./PauseSvg"
-import PlaySvg from "./PlaySvg"
-
-
-
-const LeftButtonMPlayer = () => {
+export default function LeftButtonMPlayer() {
   const dispatch = useAppDispatch();
   const isPlaying = useAppSelector((state) => state.player.isPlaying);
 
-  const handleToggle = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    dispatch(togglePlay());
-  };
-
-  return (
-    <div className=" w-14 flex items-center justify-between">
-       <button  title="play">
-        {/* <CastPlayer /> */}
-        </button>
-        <button onClick={handleToggle} className="active:scale-95 transition flex items-center ">
-        {isPlaying ? <PauseSvg /> : <PlaySvg />}
-        </button>
-  </div>
-  )
+  return <button type="button" aria-label={isPlaying ? "مکث" : "پخش"} className="milify-icon"
+    onClick={() => dispatch(togglePlay())}>
+    {isPlaying ? <Pause fill="currentColor" /> : <Play fill="currentColor" />}
+  </button>;
 }
-
-export default LeftButtonMPlayer

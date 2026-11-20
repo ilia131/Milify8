@@ -13,7 +13,7 @@ export const FilterList = ({ filters, activeFilter, onFilterClick, onClose  }: F
     const { isActive, visibleFilters } = useFilterLogic(filters, activeFilter);
 
     return (
-      <div className="w-42 h-8.75 flex justify-between">
+      <div className="flex min-h-9 flex-wrap items-center gap-2">
        {visibleFilters.map((item) => (
         <div key={item.name} className="flex items-center gap-2">
           {isActive(item) && <CloseButton onClick={onClose} />}

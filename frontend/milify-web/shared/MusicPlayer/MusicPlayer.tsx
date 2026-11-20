@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useAppSelector } from "@/redux/hook";
 
@@ -31,7 +31,6 @@ const MusicPlayer = ({ visible }: { visible: boolean }) => {
 
   const {
     seek,
-    seekFromEvent,
     formatTime,
 
     handleNext,
@@ -56,6 +55,17 @@ const MusicPlayer = ({ visible }: { visible: boolean }) => {
 
   const currentSong =
     queue[currentIndex];
+
+  useEffect(() => {
+    if (!visible || (!isOpenQueue && !isCoverOpen)) return;
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key !== "Escape" || event.defaultPrevented) return;
+      if (isOpenQueue) setIsOpenQueue(false);
+      else closeCover();
+    }
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [visible, isOpenQueue, isCoverOpen, closeCover]);
 
   if (!visible || !currentSong) return null;
 
@@ -86,7 +96,7 @@ const MusicPlayer = ({ visible }: { visible: boolean }) => {
             progress={progress}
             lowerTime={formatTime(currentTime)}
             higherTime={formatTime(duration)}
-            handleSeek={seekFromEvent}
+            handleSeek={seek}
             onNext={handleNext}
             onPrevious={handlePrevious}
             setIsOpenQueue={setIsOpenQueue}

@@ -17,9 +17,7 @@ const ArtistDetail = () => {
 
   const artistname = params.artistname;
 
-  const artistname2 = params.artistname
-    ? decodeURIComponent(params.artistname)
-    : "";
+  const artistname2 = artistname;
 
   const activeTab = useAppSelector(
     (state) => state.tabs.activeTab
@@ -31,7 +29,7 @@ const ArtistDetail = () => {
 
   const {
     data,
-    isLoading,
+    isLoading, isError, refetch,
   } = useArtistDetailQuery(artistname);
 
   // =========================================================
@@ -168,7 +166,13 @@ const ArtistDetail = () => {
   // =========================================================
 
   if (isLoading) {
-    return null;
+    return <p role="status" className="milify-page">در حال دریافت صفحهٔ هنرمند…</p>;
+  }
+
+  if (isError || !data) {
+    return <p role="alert" className="milify-page">صفحهٔ هنرمند دریافت نشد.{" "}
+      <button type="button" className="underline" onClick={refetch}>تلاش دوباره</button>
+    </p>;
   }
 
   // =========================================================

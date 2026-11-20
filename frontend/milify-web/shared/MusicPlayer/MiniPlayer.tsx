@@ -1,9 +1,9 @@
 "use client";
 
 import { useDominantColorFromImage } from "@/shared/hooks/useDominantColorFromImage"
-import ButtonsImageMusicPlayer from "./ButtonsImageMusicPlayer";
+import RightButtonMPlayer from "./RightButtonMPlayer";
+import LeftButtonMPlayer from "./LeftButtonMPlayer";
 import MusicBarMp from "./MusicBarMp";
-import { cn } from "@/utils/cn";
 import { Song } from "@/redux/features/playerSlice";
 import { useAppSelector } from "@/redux/hook";
 interface MiniPlayerProps {
@@ -23,12 +23,8 @@ const MiniPlayer = ({
 
   return (
     <aside
-      className={cn(
-        "fixed left-[50.5%] -translate-x-1/2",
-        "w-[min(408px,96vw)]",
-        "bottom-22 h-14.25 z-4 rounded-[11px]",
-        "flex pl-2 items-center justify-between pr-4.75 shrink-0"
-      )}
+      aria-label="پخش‌کنندهٔ کوچک"
+      className="fixed inset-x-2 bottom-[calc(var(--milify-nav-height)+.5rem)] z-40 flex items-center gap-2 overflow-hidden rounded-xl px-2 py-1"
       style={{
         background: `
           linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.25)),
@@ -36,9 +32,12 @@ const MiniPlayer = ({
         `,
         transition: "background 600ms ease"
       }}
-      onClick={onOpenCover}
     >
-      <ButtonsImageMusicPlayer currentSong={currentSong} />
+      <button type="button" aria-label={`باز کردن پخش‌کنندهٔ ${currentSong.title}`} onClick={onOpenCover}
+        className="min-w-0 flex-1 text-start">
+        <RightButtonMPlayer currentSong={currentSong} />
+      </button>
+      <LeftButtonMPlayer />
       <MusicBarMp progress={progress} />
     </aside>
   );
